@@ -1,0 +1,23 @@
+#hizli-sula-button, #bolge-ekle-button{
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#hizli-sula-button{
+    background-color: rgb(51, 194, 51);
+}
+
+#bolge-ekle-button,#hizli-sula-button:hover{
+    background-color: #0056b3;
+}
+
+#bolge-ekle-button:hover{
+    background-color: rgb(172, 11, 172);
+}
+
+#add-region-button {
+    margin-top: 20px;
+  }

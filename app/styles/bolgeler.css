@@ -1,0 +1,11 @@
+#sulama-bolgeler {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-around;
+}

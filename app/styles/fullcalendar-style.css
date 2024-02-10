@@ -6,43 +6,35 @@
     cursor: move;
   }
   
-  #bolgeEkle {
-    border: none;
-    margin-left: 40px;
-    background-color: rgb(42, 169, 42);
-    color: #fff;
-    border-radius: 25px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-  
   #bolge-baslik {
     margin-top: 15px;
     margin-left: 10px;
   }
   
+  #bolgeler, #takvim {
+    display: inline-block;
+    vertical-align: top;
+  }
+  
   #bolgeler {
     min-height: 200px;
+  
     width: 150px;
     padding: 0 10px;
+    flex-direction: column;
     border: 1px solid #ccc;
     background: #eee;
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     margin-left: 50px;
     margin-top: 50px;
   }
   
   #takvim {
-    width: 78%;
+    width: 80%;
     min-width: max-content;
-    margin-left: 300px;
+    margin-left: 50px;
   }
-  
   
   .event-wrapper {
     overflow: auto;
@@ -55,12 +47,6 @@
   
   .event-details {
     margin-bottom: 5px;
-  }
-  
-  #add-region-button {
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
   }
   
   #open-form-button {

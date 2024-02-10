@@ -89,6 +89,24 @@ function HomeCalendar() {
   };
   return (
     <>
+      <div id="bolgeler">
+        <div id="bolge-baslik">
+          <strong>Bölgeler</strong>
+          <Button
+            size="sm"
+            id="open-form-button"
+            variant="primary"
+            onClick={() => setFormVisibility(!formVisibility)}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </Button>
+        </div>
+        {anyArea || (
+          <p style={{ textAlign: "center", marginTop: 20 }}>
+            Kayıtlı Bölge Bulunmamaktadır.
+          </p>
+        )}
+      </div>
       <div id="takvim">
         <FullCalendar
           ref={calendarRef}
@@ -136,6 +154,7 @@ function HomeCalendar() {
           editable={true}
           droppable={true}
           allDaySlot={false}
+          // height={1000}
           forceEventDuration={true}
           dayHeaderFormat={{
             weekday: "long",
@@ -158,26 +177,6 @@ function HomeCalendar() {
             },
           }}
         />
-      </div>
-
-      <div id="bolgeler">
-        <div id="bolge-baslik">
-          <strong>Bölgeler</strong>
-
-          <Button
-            size="sm"
-            id="open-form-button"
-            variant="primary"
-            onClick={() => setFormVisibility(!formVisibility)}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
-        </div>
-        {anyArea || (
-          <p style={{ textAlign: "center", marginTop: 20 }}>
-            Kayıtlı Bölge Bulunmamaktadır.
-          </p>
-        )}
       </div>
       <Modal
         onHide={() => setFormVisibility(!formVisibility)}

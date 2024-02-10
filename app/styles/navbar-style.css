@@ -1,0 +1,28 @@
+nav {
+    display: flex;
+    justify-content: space-around;
+    background: none;
+    padding: 10px;
+  }
+  
+  nav a {
+    font-size: large; 
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav a:hover {
+    color: #00bcd4;
+  }
+
+  nav a:active {
+    color: black;
+  }
+  
+  nav img {
+    display: block;
+    margin: auto; 
+  }

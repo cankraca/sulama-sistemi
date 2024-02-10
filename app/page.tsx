@@ -1,11 +1,10 @@
-import { Calendar } from "@fullcalendar/core/index.js";
 import React from "react";
-import HomeCalendar from "./components/fullcalendar";
+import HızlıSulaButton from "./components/hizli-sula";
 
 const HomePage = () => {
   return (
     <main>
-      <HomeCalendar />
+      <HızlıSulaButton />
     </main>
   );
 };
