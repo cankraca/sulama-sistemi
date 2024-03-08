@@ -9,8 +9,9 @@ import { EventImpl } from "@fullcalendar/core/internal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Form, Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../styles/fullcalendar-style.css";
+import useBolgelerData from "../models/list_bolgeler";
 
 interface MyEvent {
   id: string;
@@ -19,11 +20,10 @@ interface MyEvent {
 }
 
 function HomeCalendar() {
-  const [anyArea, setAnyArea] = useState<boolean>(false);
-  const [formVisibility, setFormVisibility] = useState<boolean>(false);
   const [timeline, setTimeLine] = useState<number>(15);
   const [timelineForm, setTimelineForm] = useState<boolean>(false);
   const calendarRef = useRef<FullCalendar>(null);
+  const bolgeData = useBolgelerData();
 
   useEffect(() => {
     const containerEl = document.querySelector("#bolgeler") as HTMLElement;
@@ -50,37 +50,6 @@ function HomeCalendar() {
     info.remove();
   };
 
-  const handleAddNewRegion = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const bolgelerDiv = document.getElementById("bolgeler");
-
-    if (bolgelerDiv) {
-      setAnyArea(true);
-      const yeniBolge = document.createElement("div");
-
-      const yeniBolgeIsim = document.getElementById(
-        "bolgeAdi"
-      ) as HTMLInputElement;
-
-      const yeniBolgeRenk = document.getElementById(
-        "bolgeRenk"
-      ) as HTMLInputElement;
-
-      yeniBolge.textContent = yeniBolgeIsim.value;
-      yeniBolge.style.backgroundColor = yeniBolgeRenk.value;
-
-      yeniBolge.classList.add("bolge");
-      bolgelerDiv.appendChild(yeniBolge);
-
-      yeniBolgeIsim.value = "";
-      yeniBolgeRenk.value = "";
-
-      setFormVisibility(false);
-    } else {
-      setAnyArea(false);
-    }
-  };
   const handleUpdateCalendar = () => {
     if (calendarRef.current) {
       const getApi = calendarRef.current.getApi();
@@ -92,16 +61,16 @@ function HomeCalendar() {
       <div id="bolgeler">
         <div id="bolge-baslik">
           <strong>Bölgeler</strong>
-          <Button
-            size="sm"
-            id="open-form-button"
-            variant="primary"
-            onClick={() => setFormVisibility(!formVisibility)}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Button>
         </div>
-        {anyArea || (
+        {bolgeData.length > 0 ? (
+          <>
+            {bolgeData.map((bolge) => (
+              <div className="bolge" style={{ backgroundColor: bolge.Renk }}>
+                {bolge.BolgeAdi}
+              </div>
+            ))}
+          </>
+        ) : (
           <p style={{ textAlign: "center", marginTop: 20 }}>
             Kayıtlı Bölge Bulunmamaktadır.
           </p>
@@ -178,36 +147,6 @@ function HomeCalendar() {
           }}
         />
       </div>
-      <Modal
-        onHide={() => setFormVisibility(!formVisibility)}
-        show={formVisibility}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Yeni Bölge Ekle</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleAddNewRegion}>
-            <Form.Group>
-              <Form.Label>Bölge Adı:</Form.Label>
-              <Form.Control
-                id="bolgeAdi"
-                type="text"
-                placeholder="Bölge adını giriniz"
-                required
-              ></Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Renk:</Form.Label>
-              <Form.Control type="color" id="bolgeRenk"></Form.Control>
-            </Form.Group>
-            <Button variant="primary" type="submit" id="add-region-button">
-              Ekle
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-
       <Modal
         show={timelineForm}
         onHide={() => setTimelineForm(!timelineForm)}

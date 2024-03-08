@@ -6,40 +6,56 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/fab-style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import BolgeCard from "./bolge-card";
-import ReactDOM from "react-dom";
 
 const BolgeEkleButton = () => {
   const [formVisibility, setFormVisibility] = useState<boolean>(false);
 
-  const handleAddNewRegion = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAddNewRegion = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
-    const sulamaBolgelerDiv = document.getElementById("sulama-bolgeler");
-
-    if (sulamaBolgelerDiv) {
-      const newDiv = document.createElement("div");
+    try {
       const sulamaBolgeIsim = (
         document.getElementById("sulamaBolgeAdi") as HTMLInputElement
       ).value;
-
+      const yeniBolgeRenk = document.getElementById(
+        "bolgeRenk"
+      ) as HTMLInputElement;
       const sulamaBolgeResimInput = document.getElementById(
         "sulamaBolgeResim"
       ) as HTMLInputElement;
 
       if (sulamaBolgeResimInput && sulamaBolgeResimInput.files) {
         const sulamaBolgeResim = sulamaBolgeResimInput.files[0];
-        const bolgeCard = (
-          <BolgeCard image={sulamaBolgeResim} title={sulamaBolgeIsim} />
-        );
-        ReactDOM.render(bolgeCard, newDiv);
+
+        const response = await fetch("/api/bolgeler", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            BolgeAdi: sulamaBolgeIsim,
+            BolgeResmi: new Blob([sulamaBolgeResim], {
+              type: sulamaBolgeResim.type,
+            }),
+            ResimAdi: sulamaBolgeResim.name,
+            Renk: yeniBolgeRenk.value,
+          }),
+        });
+        const responseData = await response.json();
+        console.log(responseData);
+        if (response.ok) {
+          console.log(responseData.message);
+        } else {
+          console.log("Hata: ", responseData.error);
+        }
       }
-
-      sulamaBolgelerDiv.appendChild(newDiv);
-
+    } catch (error) {
+      console.log("Hata: ", error);
+    } finally {
       setFormVisibility(false);
     }
   };
-
   return (
     <>
       <Button
@@ -80,6 +96,11 @@ const BolgeEkleButton = () => {
                 type="file"
                 accept=".png, .jpeg, .jpg"
               ></Form.Control>
+            </Form.Group>
+            <div style={{ marginBottom: "20px" }}></div>
+            <Form.Group>
+              <Form.Label>Bölge'nin Program Üzerindeki Rengi:</Form.Label>
+              <Form.Control type="color" id="bolgeRenk"></Form.Control>
             </Form.Group>
             <Button variant="primary" type="submit" id="add-region-button">
               Ekle
