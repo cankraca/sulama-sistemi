@@ -8,27 +8,25 @@ import useBolgelerData from "../models/list_bolgeler";
 
 const Bolgeler = () => {
   const bolgeData = useBolgelerData();
+  const [cards, setCards] = useState<React.JSX.Element[]>([]);
+
+  useEffect(() => {
+    const newCards = bolgeData.map((bolge) => (
+      <BolgeCard
+        key={bolge.BolgeID}
+        id={bolge.BolgeID}
+        title={bolge.BolgeAdi}
+        description={bolge.OlusturulmaTarihi}
+        image={bolge.BolgeResmi}
+      />
+    ));
+    setCards(newCards);
+  }, [bolgeData]);
 
   return (
     <main>
       <div id="sulama-bolgeler">
-        {bolgeData.length > 0 ? (
-          bolgeData.map((bolge) => (
-            <BolgeCard
-              key={bolge.BolgeID}
-              id={bolge.BolgeID}
-              title={bolge.BolgeAdi}
-              description={bolge.OlusturulmaTarihi}
-              image={
-                new File([bolge.BolgeResmi], bolge.ResimAdi, {
-                  type: bolge.BolgeResmi.type,
-                })
-              }
-            />
-          ))
-        ) : (
-          <p>Kayıtlı Bölge Bulunmamaktadır.</p>
-        )}
+        {cards.length > 0 ? cards : <p>Kayıtlı Bölge Bulunmamaktadır.</p>}
       </div>
       <BolgeEkleButton />
     </main>

@@ -1,37 +1,34 @@
 import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-
+import { useRouter } from "next/router";
 import "../styles/bolgeler.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const BolgeCard = (props: {
   id: number;
-  image: File;
+  image: string;
   title: string;
   description: Date;
 }) => {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImageUrl(reader.result as string);
-    };
-
-    reader.readAsDataURL(props.image);
-  }, [props.image]);
-
   const handleDeleteArea = async () => {
     try {
+      const imgResponse = await fetch("/api/upload", {
+        method: "DELETE",
+        body: JSON.stringify({ fileName: props.image }),
+      });
+
       const response = await fetch("/api/bolgeler", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ BolgeID: props.id }),
       });
+
+      const imgResData = imgResponse.json();
       const responseData = await response.json();
 
+      console.log(imgResData);
       console.log(responseData);
     } catch (error) {
       console.error("Hata: ", error);
@@ -49,10 +46,10 @@ const BolgeCard = (props: {
       }}
     >
       <Card.Header>
-        {imageUrl && (
+        {props.image && (
           <Card.Img
             variant="top"
-            src={imageUrl}
+            src={props.image}
             style={{ height: 150, pointerEvents: "none" }}
           />
         )}

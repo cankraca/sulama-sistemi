@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 interface Bolge {
     BolgeID: number;
     BolgeAdi: string;
-    BolgeResmi: Blob;
+    BolgeResmi: string;
     ResimAdi: string;
     Renk: string;
     OlusturulmaTarihi: Date;

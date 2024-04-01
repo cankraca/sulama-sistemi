@@ -14,6 +14,7 @@ const BolgeEkleButton = () => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+
     try {
       const sulamaBolgeIsim = (
         document.getElementById("sulamaBolgeAdi") as HTMLInputElement
@@ -28,22 +29,33 @@ const BolgeEkleButton = () => {
       if (sulamaBolgeResimInput && sulamaBolgeResimInput.files) {
         const sulamaBolgeResim = sulamaBolgeResimInput.files[0];
 
+        const data = new FormData();
+        data.set("file", sulamaBolgeResim);
+
+        const fileRes = await fetch("/api/upload", {
+          method: "POST",
+          body: data,
+        });
+
+        if (!fileRes.ok) throw new Error(await fileRes.text());
+
+        const { path } = await fileRes.json();
+
+        const result = JSON.stringify({
+          BolgeAdi: sulamaBolgeIsim,
+          BolgeResmi: "img/" + path,
+          ResimAdi: sulamaBolgeResim.name,
+          Renk: yeniBolgeRenk.value,
+        });
+
         const response = await fetch("/api/bolgeler", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            BolgeAdi: sulamaBolgeIsim,
-            BolgeResmi: new Blob([sulamaBolgeResim], {
-              type: sulamaBolgeResim.type,
-            }),
-            ResimAdi: sulamaBolgeResim.name,
-            Renk: yeniBolgeRenk.value,
-          }),
+          body: result,
         });
         const responseData = await response.json();
-        console.log(responseData);
         if (response.ok) {
           console.log(responseData.message);
         } else {

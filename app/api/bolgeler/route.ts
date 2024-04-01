@@ -12,9 +12,9 @@ export async function GET() {
 
 export async function POST(request : Request) {
     try {
-        const { BolgeAdi, BolgeResmi, Renk} = await request.json();
+        const { BolgeAdi, BolgeResmi, ResimAdi, Renk} = await request.json();
             
-        await executeQuery("INSERT INTO bolgeler (BolgeAdi, BolgeResmi, Renk, OlusturulmaTarihi) VALUES (?, ?, ?, LOCALTIME())",[BolgeAdi,BolgeResmi,Renk]);
+        await executeQuery("INSERT INTO bolgeler (BolgeAdi, BolgeResmi, ResimAdi, Renk, OlusturulmaTarihi) VALUES (?, ?, ?, ?, LOCALTIME())",[BolgeAdi,BolgeResmi,ResimAdi,Renk]);
     
         return Response.json({message: "Data added successfully!"}, {status: 200, });
 
