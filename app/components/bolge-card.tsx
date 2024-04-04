@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import "../styles/bolgeler.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";

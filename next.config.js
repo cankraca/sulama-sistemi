@@ -7,5 +7,4 @@ const nextConfig = {
     MYSQL_DBNAME: "sulamasistemi",
   },
 };
-
 module.exports = nextConfig;

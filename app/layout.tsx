@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "./components/navbar";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import { BolgeContextProvider } from "./context/BolgeContext";
 
 config.autoAddCss = false;
 
@@ -23,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NavBar />
-        {children}
+        <BolgeContextProvider>{children}</BolgeContextProvider>
       </body>
     </html>
   );

@@ -11,7 +11,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../styles/fullcalendar-style.css";
-import useBolgelerData from "../models/list_bolgeler";
+import { useBolgeContext } from "../context/BolgeContext";
 
 interface MyEvent {
   id: string;
@@ -23,7 +23,7 @@ function HomeCalendar() {
   const [timeline, setTimeLine] = useState<number>(15);
   const [timelineForm, setTimelineForm] = useState<boolean>(false);
   const calendarRef = useRef<FullCalendar>(null);
-  const bolgeData = useBolgelerData();
+  const bolgeData = useBolgeContext();
 
   useEffect(() => {
     const containerEl = document.querySelector("#bolgeler") as HTMLElement;
