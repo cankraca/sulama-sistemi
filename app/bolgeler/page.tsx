@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import BolgeEkleButton from "../components/bolge-ekle";
 import "../styles/bolgeler.css";
 import BolgeCard from "../components/bolge-card";
-import useBolgelerData from "../models/list_bolgeler";
 import { useBolgeContext } from "../context/BolgeContext";
 
 const Bolgeler = () => {

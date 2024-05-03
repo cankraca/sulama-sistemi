@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/fab-style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { mutate } from "swr";
 
 const BolgeEkleButton = () => {
   const [formVisibility, setFormVisibility] = useState<boolean>(false);
@@ -65,6 +66,7 @@ const BolgeEkleButton = () => {
     } catch (error) {
       console.log("Hata: ", error);
     } finally {
+      mutate("/api/bolgeler");
       setFormVisibility(false);
     }
   };
@@ -98,7 +100,7 @@ const BolgeEkleButton = () => {
                 type="text"
                 placeholder="Bölge adını giriniz"
                 required
-              ></Form.Control>
+              />
             </Form.Group>
             <div style={{ marginBottom: "20px" }}></div>
             <Form.Group>
@@ -107,7 +109,7 @@ const BolgeEkleButton = () => {
                 id="sulamaBolgeResim"
                 type="file"
                 accept=".png, .jpeg, .jpg"
-              ></Form.Control>
+              />
             </Form.Group>
             <div style={{ marginBottom: "20px" }}></div>
             <Form.Group>

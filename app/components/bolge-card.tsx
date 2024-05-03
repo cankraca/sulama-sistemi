@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useRouter } from "next/navigation";
 import "../styles/bolgeler.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
+import BolgeCardInfo from "./bolge-card-info";
+import { mutate } from "swr";
 
 const BolgeCard = (props: {
   id: number;
@@ -12,6 +13,9 @@ const BolgeCard = (props: {
   title: string;
   description: Date;
 }) => {
+  const [bolgeDetailVisibility, setBolgeDetailVisibility] =
+    useState<boolean>(false);
+
   const handleDeleteArea = async () => {
     try {
       const imgResponse = await fetch("/api/upload", {
@@ -32,55 +36,68 @@ const BolgeCard = (props: {
       console.log(responseData);
     } catch (error) {
       console.error("Hata: ", error);
+    } finally {
+      mutate("/api/bolgeler");
     }
   };
   return (
-    <Card
-      onClick={() => {}}
-      className="yeni-bolge-card"
-      style={{
-        width: 250,
-        marginLeft: 35,
-        marginBottom: 30,
-        cursor: "pointer",
-      }}
-    >
-      <Card.Header>
-        {props.image && (
-          <Card.Img
-            variant="top"
-            src={props.image}
-            style={{ height: 150, pointerEvents: "none" }}
-          />
-        )}
-      </Card.Header>
+    <>
+      <Card
+        className="yeni-bolge-card"
+        style={{
+          width: 250,
+          marginLeft: 35,
+          marginBottom: 30,
+          cursor: "pointer",
+        }}
+      >
+        <Card.Header>
+          {props.image && (
+            <Card.Img
+              variant="top"
+              src={props.image}
+              style={{ height: 150, pointerEvents: "none" }}
+            />
+          )}
+        </Card.Header>
 
-      <Card.Body>
-        <Card.Title>{props.title}</Card.Title>
-        <Card.Text>
-          {new Date(props.description).toLocaleString()} tarihinde oluşturuldu
-        </Card.Text>
-      </Card.Body>
-      <Card.Footer className="card-footer">
-        <Button variant="link">
-          <FontAwesomeIcon icon={faCircleInfo} />
-        </Button>
-        <Button
-          variant="link"
-          onClick={() => {
-            if (
-              window.confirm(
-                `Şeçili bölgeyi silmek istediğinizden emin misiniz?`
-              )
-            ) {
-              handleDeleteArea();
-            }
-          }}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </Button>
-      </Card.Footer>
-    </Card>
+        <Card.Body>
+          <Card.Title>{props.title}</Card.Title>
+          <Card.Text>
+            {new Date(props.description).toLocaleString()} tarihinde oluşturuldu
+          </Card.Text>
+        </Card.Body>
+        <Card.Footer className="card-footer">
+          <Button
+            variant="link"
+            onClick={() => setBolgeDetailVisibility(!bolgeDetailVisibility)}
+          >
+            <FontAwesomeIcon icon={faCircleInfo} />
+          </Button>
+          <Button
+            variant="link"
+            onClick={() => {
+              if (
+                window.confirm(
+                  `Şeçili bölgeyi silmek istediğinizden emin misiniz?`
+                )
+              ) {
+                handleDeleteArea();
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </Button>
+        </Card.Footer>
+      </Card>
+      <BolgeCardInfo
+        bolgeId={props.id}
+        bolgeResmi={props.image}
+        bolgeAdi={props.title}
+        bolgeDetailVisibility={bolgeDetailVisibility}
+        setBolgeDetailVisibility={setBolgeDetailVisibility}
+      />
+    </>
   );
 };
 

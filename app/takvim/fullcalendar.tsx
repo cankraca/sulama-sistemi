@@ -12,9 +12,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../styles/fullcalendar-style.css";
 import { useBolgeContext } from "../context/BolgeContext";
+import { useProgramContext } from "../context/ProgramContext";
+import { mutate } from "swr";
 
 interface MyEvent {
-  id: string;
   title: string;
   color: string;
 }
@@ -23,6 +24,7 @@ function HomeCalendar() {
   const [timeline, setTimeLine] = useState<number>(15);
   const [timelineForm, setTimelineForm] = useState<boolean>(false);
   const calendarRef = useRef<FullCalendar>(null);
+  const initialEvents = useProgramContext();
   const bolgeData = useBolgeContext();
 
   useEffect(() => {
@@ -32,7 +34,7 @@ function HomeCalendar() {
       itemSelector: ".bolge",
       eventData: (eventEl) => {
         const event: MyEvent = {
-          id: Math.floor(Math.random() * 1000).toString(),
+          //id: Math.floor(Math.random() * 1000).toString(),
           title: eventEl.innerText,
           color: window.getComputedStyle(eventEl).backgroundColor,
         };
@@ -50,10 +52,26 @@ function HomeCalendar() {
     info.remove();
   };
 
-  const handleUpdateCalendar = () => {
+  const handleUpdateCalendar = async () => {
     if (calendarRef.current) {
       const getApi = calendarRef.current.getApi();
-      console.log(getApi.getEvents().map((i) => i.toJSON()));
+      const result = JSON.stringify({
+        ProgramIcerik: getApi.getEvents().map((i) => i.toJSON()),
+      });
+      const response = await fetch("/api/program", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: result,
+      });
+      const responseData = await response.json();
+      if (response.ok) {
+        console.log(responseData.message);
+      } else {
+        console.log("Hata: ", responseData.error);
+      }
+      mutate("/api/program");
     }
   };
   return (
@@ -78,6 +96,7 @@ function HomeCalendar() {
       </div>
       <div id="takvim">
         <FullCalendar
+          events={initialEvents.map((x) => x.ProgramIcerik)[0]}
           ref={calendarRef}
           eventContent={(eventInfo) => {
             return (
@@ -130,7 +149,7 @@ function HomeCalendar() {
           }}
           locales={allLocales}
           locale={"tr"}
-          //events={{ events }}
+          select={() => {}}
           customButtons={{
             timelineButton: {
               text: "Zaman Aralığı",

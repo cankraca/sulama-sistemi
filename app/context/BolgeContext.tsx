@@ -1,12 +1,6 @@
 "use client";
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  ReactNode,
-} from "react";
-
+import React, { createContext, useContext, ReactNode } from "react";
+import useSWR from "swr";
 interface Bolge {
   BolgeID: number;
   BolgeAdi: string;
@@ -21,18 +15,15 @@ interface Bolge {
 export const BolgeContext = createContext<Bolge[] | undefined>(undefined);
 
 export const BolgeContextProvider = ({ children }: { children: ReactNode }) => {
-  const [bolgeData, setBolgeData] = useState<Bolge[]>([]);
+  const { data, error, isLoading } = useSWR("/api/bolgeler", fetcher);
 
-  useEffect(() => {
-    fetch("/api/bolgeler")
-      .then((response) => response.json())
-      .then((json) => setBolgeData(json))
-      .catch((error) => console.error("Hata: ", error));
-  }, [bolgeData]);
-
-  return (
-    <BolgeContext.Provider value={bolgeData}>{children}</BolgeContext.Provider>
-  );
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+  if (isLoading) {
+    return <div>Loading..</div>;
+  }
+  return <BolgeContext.Provider value={data}>{children}</BolgeContext.Provider>;
 };
 
 export const useBolgeContext = () => {
@@ -41,4 +32,13 @@ export const useBolgeContext = () => {
     throw new Error("BolgeContext is undefined");
   }
   return bolge;
+};
+
+const fetcher = async () => {
+  const response = await fetch("/api/bolgeler");
+  if (!response.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const bolgeData: Bolge[] = await response.json();
+  return bolgeData;
 };
