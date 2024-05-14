@@ -2,7 +2,7 @@ import { executeQuery } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-    const query = await executeQuery("SELECT ProgramIcerik FROM program");
+    const query = await executeQuery("SELECT * FROM program ORDER BY ProgramID DESC LIMIT 1");
 
     const data = JSON.stringify(query);
 
@@ -31,7 +31,7 @@ export async function DELETE(request: NextRequest) {
     try {
         const {ProgramID} = await request.json();
       
-        await executeQuery("DELETE FROM program WHERE ProgramID = ?", [ProgramID]);
+        await executeQuery("DELETE FROM program WHERE ProgramID NOT IN (SELECT * FROM (SELECT MAX(ProgramID) FROM program) AS max_program)", [ProgramID]);
       
         return NextResponse.json({message: "Data deleted!"}, {status: 200});
       

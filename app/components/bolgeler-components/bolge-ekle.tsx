@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/fab-style.css";
+import "@/app/styles/fab-style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { mutate } from "swr";
@@ -45,7 +45,6 @@ const BolgeEkleButton = () => {
         const result = JSON.stringify({
           BolgeAdi: sulamaBolgeIsim,
           BolgeResmi: "img/" + path,
-          ResimAdi: sulamaBolgeResim.name,
           Renk: yeniBolgeRenk.value,
         });
 

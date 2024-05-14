@@ -1,13 +1,3 @@
-.bolge-info{
-    width: 60%;
-    max-width: 60vw;
-}
-
-.bolge-ad-info {
-    display: flex;
-    align-items: center;
-}
-
 .bolge-resim-info:hover {
     filter: brightness(50%);
 }
@@ -15,8 +5,5 @@
     cursor: pointer;
     display: flex;
     justify-content: center;
-}
-#edit-bolge-ad-button {
-    margin-left: 10px;
 }
 

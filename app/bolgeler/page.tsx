@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import BolgeEkleButton from "../components/bolge-ekle";
+import React from "react";
+import BolgeEkleButton from "../components/bolgeler-components/bolge-ekle";
 import "../styles/bolgeler.css";
-import BolgeCard from "../components/bolge-card";
+import BolgeCard from "../components/bolgeler-components/bolge-card";
 import { useBolgeContext } from "../context/BolgeContext";
 
 const Bolgeler = () => {

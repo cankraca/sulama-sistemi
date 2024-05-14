@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import "../styles/bolgeler.css";
+import "@/app/styles/bolgeler.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
 import BolgeCardInfo from "./bolge-card-info";
 import { mutate } from "swr";
+import { useProgramContext } from "../../context/ProgramContext";
 
 const BolgeCard = (props: {
   id: number;
@@ -15,9 +16,43 @@ const BolgeCard = (props: {
 }) => {
   const [bolgeDetailVisibility, setBolgeDetailVisibility] =
     useState<boolean>(false);
+  const bolgeEvents = useProgramContext();
+
+  const handleDeleteEventsofArea = async () => {
+    const eventsWithoutBolge = bolgeEvents
+      .map((x) => x.ProgramIcerik)[0]
+      .filter((item) => item.title != props.title);
+
+    const response = await fetch("/api/program", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ProgramIcerik: eventsWithoutBolge,
+      }),
+    });
+
+    const deleteResponse = await fetch("/api/program", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ProgramID: bolgeEvents.map((x) => x.ProgramID)[0],
+      }),
+    });
+
+    const responseData = await response.json();
+    const deleteResponseData = await deleteResponse.json();
+
+    console.log(responseData);
+    console.log(deleteResponseData);
+  };
 
   const handleDeleteArea = async () => {
     try {
+      await handleDeleteEventsofArea();
       const imgResponse = await fetch("/api/upload", {
         method: "DELETE",
         body: JSON.stringify({ fileName: props.image }),
@@ -38,6 +73,7 @@ const BolgeCard = (props: {
       console.error("Hata: ", error);
     } finally {
       mutate("/api/bolgeler");
+      mutate("/api/program");
     }
   };
   return (
@@ -48,7 +84,6 @@ const BolgeCard = (props: {
           width: 250,
           marginLeft: 35,
           marginBottom: 30,
-          cursor: "pointer",
         }}
       >
         <Card.Header>
@@ -63,7 +98,7 @@ const BolgeCard = (props: {
 
         <Card.Body>
           <Card.Title>{props.title}</Card.Title>
-          <Card.Text>
+          <Card.Text style={{ color: "black" }}>
             {new Date(props.description).toLocaleString()} tarihinde oluşturuldu
           </Card.Text>
         </Card.Body>

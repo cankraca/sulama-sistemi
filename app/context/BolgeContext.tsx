@@ -1,15 +1,13 @@
 "use client";
 import React, { createContext, useContext, ReactNode } from "react";
 import useSWR from "swr";
-interface Bolge {
+export interface Bolge {
   BolgeID: number;
   BolgeAdi: string;
   BolgeResmi: string;
-  ResimAdi: string;
   Renk: string;
   OlusturulmaTarihi: Date;
-  VanaID: number;
-  ProgramID: number;
+  KullaniciID: number;
 }
 
 export const BolgeContext = createContext<Bolge[] | undefined>(undefined);

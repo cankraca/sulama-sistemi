@@ -6,6 +6,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { BolgeContextProvider } from "./context/BolgeContext";
 import { ProgramContextProvider } from "./context/ProgramContext";
+import { VanalarContextProvider } from "./context/VanaContext";
 
 config.autoAddCss = false;
 
@@ -26,7 +27,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <NavBar />
         <BolgeContextProvider>
-          <ProgramContextProvider>{children}</ProgramContextProvider>
+          <ProgramContextProvider>
+            <VanalarContextProvider>{children}</VanalarContextProvider>
+          </ProgramContextProvider>
         </BolgeContextProvider>
       </body>
     </html>

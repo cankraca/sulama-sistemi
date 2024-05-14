@@ -26,3 +26,8 @@ nav {
     display: block;
     margin: auto; 
   }
+
+.cikis-yap-button {
+  display: flex;
+  place-items: center;
+}

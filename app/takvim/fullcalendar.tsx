@@ -7,13 +7,17 @@ import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import React, { useState, useRef, useEffect } from "react";
 import { EventImpl } from "@fullcalendar/core/internal";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import "../styles/fullcalendar-style.css";
 import { useBolgeContext } from "../context/BolgeContext";
-import { useProgramContext } from "../context/ProgramContext";
+import {
+  ProgramWithRecurring,
+  useProgramContext,
+} from "../context/ProgramContext";
 import { mutate } from "swr";
+import TimeLine from "../components/program-components/timeline";
 
 interface MyEvent {
   title: string;
@@ -34,7 +38,6 @@ function HomeCalendar() {
       itemSelector: ".bolge",
       eventData: (eventEl) => {
         const event: MyEvent = {
-          //id: Math.floor(Math.random() * 1000).toString(),
           title: eventEl.innerText,
           color: window.getComputedStyle(eventEl).backgroundColor,
         };
@@ -52,25 +55,59 @@ function HomeCalendar() {
     info.remove();
   };
 
-  const handleUpdateCalendar = async () => {
+  const testFunction = () => {
+  
+  };
+  const formatEvents = () => {
     if (calendarRef.current) {
-      const getApi = calendarRef.current.getApi();
-      const result = JSON.stringify({
-        ProgramIcerik: getApi.getEvents().map((i) => i.toJSON()),
-      });
+      const myProgram: ProgramWithRecurring[] = [];
+      const takvimListesi = calendarRef.current.getApi().getEvents();
+      takvimListesi.map((x) =>
+        myProgram.push({
+          allDay: false,
+          backgroundColor: x.backgroundColor,
+          borderColor: x.borderColor,
+          daysOfWeek: [x.start?.getDay().toString() ?? ""],
+          endTime: x.endStr.split("T")[1],
+          startTime: x.startStr.split("T")[1],
+          title: x.title,
+        })
+      );
+      return myProgram;
+    }
+    return [];
+  };
+
+  const handleUpdateCalendar = async () => {
+    try {
       const response = await fetch("/api/program", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: result,
+        body: JSON.stringify({
+          ProgramIcerik: formatEvents(),
+        }),
+      });
+
+      const deleteResponse = await fetch("/api/program", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ProgramID: initialEvents.map((x) => x.ProgramID)[0],
+        }),
       });
       const responseData = await response.json();
-      if (response.ok) {
-        console.log(responseData.message);
-      } else {
-        console.log("Hata: ", responseData.error);
-      }
+      const deleteResponseData = await deleteResponse.json();
+
+      console.log(responseData);
+      console.log(deleteResponseData);
+    } catch (error) {
+      console.error("Hata: ", error);
+    } finally {
+      alert("Sulama Programınız Güncellenmiştir!");
       mutate("/api/program");
     }
   };
@@ -129,7 +166,7 @@ function HomeCalendar() {
           // defaultTimedEventDuration={"00:45"}
           headerToolbar={{
             start: "title",
-            end: "updateButton timelineButton",
+            end: "updateButton timelineButton testButton",
           }}
           windowResizeDelay={100}
           handleWindowResize={true}
@@ -149,8 +186,14 @@ function HomeCalendar() {
           }}
           locales={allLocales}
           locale={"tr"}
-          select={() => {}}
+          //select={() => {}}
           customButtons={{
+            testButton: {
+              text: "Test",
+              click: () => {
+                testFunction();
+              },
+            },
             timelineButton: {
               text: "Zaman Aralığı",
               click: () => {
@@ -166,34 +209,12 @@ function HomeCalendar() {
           }}
         />
       </div>
-      <Modal
-        show={timelineForm}
-        onHide={() => setTimelineForm(!timelineForm)}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Yeni Zaman Aralığı Belirleyin</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Değer: {timeline} dakika</Form.Label>
-              <Form.Range
-                defaultValue={timeline}
-                min={5}
-                max={30}
-                onChange={(e) => setTimeLine(parseInt(e.target.value))}
-              ></Form.Range>
-            </Form.Group>
-            <Button
-              id="close-range-form"
-              onClick={() => setTimelineForm(!timelineForm)}
-            >
-              Kapat
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <TimeLine
+        timelineForm={timelineForm}
+        setTimelineForm={setTimelineForm}
+        timeline={timeline}
+        setTimeLine={setTimeLine}
+      />
     </>
   );
 }

@@ -1,15 +1,20 @@
 "use client";
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, ReactNode } from "react";
 import useSWR from "swr";
 
-interface Program {
-  ProgramIcerik: string;
+export interface Program {
+  ProgramID: number;
+  ProgramIcerik: ProgramWithRecurring[];
+}
+
+export interface ProgramWithRecurring {
+  allDay: boolean;
+  borderColor: string;
+  backgroundColor: string;
+  title: string;
+  daysOfWeek: string[];
+  startTime: string;
+  endTime: string;
 }
 
 export const ProgramContext = createContext<Program[] | undefined>(undefined);
@@ -19,7 +24,7 @@ export const ProgramContextProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const { data, error, isLoading } = useSWR("/api/bolgeler", fetcher);
+  const { data, error, isLoading } = useSWR("/api/program", fetcher);
 
   if (error) {
     return <div>Error: {error.message}</div>;
