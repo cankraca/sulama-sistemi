@@ -1,0 +1,35 @@
+html, body {
+    height: 100%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.log-in-container{
+    width: 400px;
+    height: 400px;  
+    background-color: rgb(108, 0, 180);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-group{
+    margin-bottom: 20px;
+    color: white;
+}
+
+.error-message {
+    color: white;
+}
+
+.login-form {
+    display: grid;
+}
+
+.form-link{
+    color: white;
+    margin-top: 20px;
+}

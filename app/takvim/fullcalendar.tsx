@@ -18,6 +18,7 @@ import {
 } from "../context/ProgramContext";
 import { mutate } from "swr";
 import TimeLine from "../components/program-components/timeline";
+import NavBar from "../components/navbar";
 
 interface MyEvent {
   title: string;
@@ -55,9 +56,6 @@ function HomeCalendar() {
     info.remove();
   };
 
-  const testFunction = () => {
-  
-  };
   const formatEvents = () => {
     if (calendarRef.current) {
       const myProgram: ProgramWithRecurring[] = [];
@@ -113,6 +111,7 @@ function HomeCalendar() {
   };
   return (
     <>
+      <NavBar />
       <div id="bolgeler">
         <div id="bolge-baslik">
           <strong>Bölgeler</strong>
@@ -166,7 +165,7 @@ function HomeCalendar() {
           // defaultTimedEventDuration={"00:45"}
           headerToolbar={{
             start: "title",
-            end: "updateButton timelineButton testButton",
+            end: "updateButton timelineButton",
           }}
           windowResizeDelay={100}
           handleWindowResize={true}
@@ -188,12 +187,6 @@ function HomeCalendar() {
           locale={"tr"}
           //select={() => {}}
           customButtons={{
-            testButton: {
-              text: "Test",
-              click: () => {
-                testFunction();
-              },
-            },
             timelineButton: {
               text: "Zaman Aralığı",
               click: () => {

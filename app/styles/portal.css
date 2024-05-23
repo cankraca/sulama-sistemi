@@ -1,0 +1,45 @@
+.background-container {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .background-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    filter: brightness(50%);
+    z-index: -1;
+  }
+  
+  .content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .left-div, .right-div {
+    margin: 0 20px;
+    flex: 1;
+    max-width: 45%;
+  }
+  
+  p {
+    color: white;
+  }
+  
+  p.baslik {
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
