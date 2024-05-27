@@ -125,7 +125,7 @@ function HomeCalendar() {
             ))}
           </>
         ) : (
-          <p style={{ textAlign: "center", marginTop: 20 }}>
+          <p style={{ textAlign: "center", marginTop: 20, color: "black" }}>
             Kayıtlı Bölge Bulunmamaktadır.
           </p>
         )}

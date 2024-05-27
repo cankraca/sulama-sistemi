@@ -5,20 +5,23 @@ import HarcananSu from "../components/anasayfa-components/harcanan-su-home";
 import SensorDurum from "../components/anasayfa-components/sensor-durum-home";
 import SulamaSira from "../components/anasayfa-components/sulama-sira-home";
 import NavBar from "../components/navbar";
+import { BolgeContextProvider } from "../context/BolgeContext";
 
 const HomePage = () => {
   return (
-    <main>
-      <NavBar />
-      <div className="ana-sayfa-view">
-        <HavaDurumu />
-        <HarcananSu />
-        <SensorDurum />
-        <SulamaSira />
-      </div>
+    <BolgeContextProvider>
+      <main>
+        <NavBar />
+        <div className="ana-sayfa-view">
+          <HavaDurumu />
+          <HarcananSu />
+          <SensorDurum />
+          <SulamaSira />
+        </div>
 
-      <HızlıSulaButton />
-    </main>
+        <HızlıSulaButton />
+      </main>
+    </BolgeContextProvider>
   );
 };
 

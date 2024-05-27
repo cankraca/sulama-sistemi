@@ -1,5 +1,3 @@
-import validateEmail from "@/app/helpers/validateEmail";
-import validatePassword from "@/app/helpers/validatePassword";
 import { executeQuery } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -8,11 +6,7 @@ import * as jose from 'jose'
 
 export async function POST(request: NextRequest) {
     try {
-        const {Email, Sifre} = await request.json();
-
-    // if(!validateEmail(Email) || !validatePassword(Sifre)){
-    //     return NextResponse.json({error: "Invalid email or password"}, {status:400});
-    // }
+    const {Email, Sifre} = await request.json();
 
     const user = await executeQuery("SELECT * FROM kullanici WHERE Email = ?", [Email])
 

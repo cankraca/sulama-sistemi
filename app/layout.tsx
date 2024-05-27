@@ -3,9 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import { BolgeContextProvider } from "./context/BolgeContext";
-import { ProgramContextProvider } from "./context/ProgramContext";
-import { VanalarContextProvider } from "./context/VanaContext";
+
 
 config.autoAddCss = false;
 
@@ -23,13 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <BolgeContextProvider>
-          <ProgramContextProvider>
-            <VanalarContextProvider>{children}</VanalarContextProvider>
-          </ProgramContextProvider>
-        </BolgeContextProvider>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

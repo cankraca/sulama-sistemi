@@ -6,7 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faTrash } from "@fortawesome/free-solid-svg-icons";
 import BolgeCardInfo from "./bolge-card-info";
 import { mutate } from "swr";
-import { useProgramContext } from "../../context/ProgramContext";
+import {
+  useProgramContext,
+} from "../../context/ProgramContext";
 
 const BolgeCard = (props: {
   id: number;

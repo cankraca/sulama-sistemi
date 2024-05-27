@@ -1,8 +1,20 @@
 import { NextRequest,NextResponse } from "next/server";
 import { executeQuery } from "../../lib/db";
+import * as jose from 'jose';
 
-export async function GET() {
-    const query = await executeQuery("SELECT * FROM bolgeler");
+
+export async function GET(request: NextRequest) {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const token = request.cookies.get("Authorization");
+
+    if(!token) {
+        return NextResponse.json({message: "Unauthorized token"}, {status: 401});
+    }
+    const {payload} = await jose.jwtVerify(token.value, secret, {});
+
+    const KullaniciID = payload.sub;
+
+    const query = await executeQuery("SELECT * FROM bolgeler WHERE KullaniciID = (?)",[KullaniciID]);
 
     const data = JSON.stringify(query);
 
@@ -13,9 +25,19 @@ export async function GET() {
 
 export async function POST(request : NextRequest) {
     try {
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        const token = request.cookies.get("Authorization");
+    
+        if(!token) {
+            return NextResponse.json({message: "Unauthorized token"}, {status: 401});
+        }
+        const {payload} = await jose.jwtVerify(token.value, secret, {});
+    
+        const KullaniciID = payload.sub;
+
         const { BolgeAdi, BolgeResmi, Renk} = await request.json();
             
-        await executeQuery("INSERT INTO bolgeler (BolgeAdi, BolgeResmi, Renk, OlusturulmaTarihi) VALUES (?, ?, ?, ?, LOCALTIME())",[BolgeAdi,BolgeResmi,Renk]);
+        await executeQuery("INSERT INTO bolgeler (BolgeAdi, BolgeResmi, Renk, OlusturulmaTarihi, KullaniciID) VALUES (?, ?, ?, LOCALTIME(), ?)",[BolgeAdi,BolgeResmi,Renk,KullaniciID]);
     
         return NextResponse.json({message: "Data added successfully!"}, {status: 200, });
 

@@ -1,8 +1,14 @@
 import { executeQuery } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
 
+    const token = request.cookies.get("Authorization");
+
+    if(!token) {
+      return NextResponse.json({message: "Unauthorized token"}, {status: 401});
+    }   
+  
     const query = await executeQuery("SELECT * FROM vanalar");
 
     const data = JSON.stringify(query);
