@@ -8,6 +8,7 @@ export interface Program {
 }
 
 export interface ProgramWithRecurring {
+  bolgeID: string;
   allDay: boolean;
   borderColor: string;
   backgroundColor: string;

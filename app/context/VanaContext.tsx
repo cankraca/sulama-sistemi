@@ -5,7 +5,8 @@ export interface Vana {
   VanaID: number;
   VanaModel: string;
   VanaCapi: number;
-  GunlukSuTuketimi: number;
+  SuAkisHizi: number;
+  HacimselDebi: number;
   BolgeID: number;
 }
 

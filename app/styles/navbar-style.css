@@ -13,15 +13,16 @@ nav {
     display: flex;
     align-items: center;
   }
-  
+
   nav a:hover {
     color: #00bcd4;
   }
-
-  nav a:active {
-    color: black;
-  }
   
+  nav a.active-link {
+    color: rgb(129, 124, 124);
+    border-top: 2px solid rgb(129, 124, 124);
+  }
+
   nav img {
     display: block;
     margin: auto; 

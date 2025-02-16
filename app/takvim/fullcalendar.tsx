@@ -19,8 +19,10 @@ import {
 import { mutate } from "swr";
 import TimeLine from "../components/program-components/timeline";
 import NavBar from "../components/navbar";
+import { useVanalarContext } from "../context/VanaContext";
 
 interface MyEvent {
+  bolgeID: string;
   title: string;
   color: string;
 }
@@ -31,6 +33,7 @@ function HomeCalendar() {
   const calendarRef = useRef<FullCalendar>(null);
   const initialEvents = useProgramContext();
   const bolgeData = useBolgeContext();
+  const vanalar = useVanalarContext();
 
   useEffect(() => {
     const containerEl = document.querySelector("#bolgeler") as HTMLElement;
@@ -39,10 +42,12 @@ function HomeCalendar() {
       itemSelector: ".bolge",
       eventData: (eventEl) => {
         const event: MyEvent = {
+          bolgeID: eventEl.id,
           title: eventEl.innerText,
           color: window.getComputedStyle(eventEl).backgroundColor,
         };
 
+        console.log(event);
         return event;
       },
     });
@@ -69,6 +74,7 @@ function HomeCalendar() {
           endTime: x.endStr.split("T")[1],
           startTime: x.startStr.split("T")[1],
           title: x.title,
+          bolgeID: x.extendedProps.bolgeID,
         })
       );
       return myProgram;
@@ -119,7 +125,11 @@ function HomeCalendar() {
         {bolgeData.length > 0 ? (
           <>
             {bolgeData.map((bolge) => (
-              <div className="bolge" style={{ backgroundColor: bolge.Renk }}>
+              <div
+                id={bolge.BolgeID.toString()}
+                className="bolge"
+                style={{ backgroundColor: bolge.Renk }}
+              >
                 {bolge.BolgeAdi}
               </div>
             ))}
@@ -135,11 +145,22 @@ function HomeCalendar() {
           events={initialEvents.map((x) => x.ProgramIcerik)[0]}
           ref={calendarRef}
           eventContent={(eventInfo) => {
+            const start = eventInfo.event.start;
+            const end = eventInfo.event.end;
+            const durationSeconds =
+              start && end
+                ? Math.floor((end.getTime() - start.getTime()) / 1000)
+                : 0;
+            const harcananSuLt = vanalar
+              .filter((x) => x.BolgeID == eventInfo.event.extendedProps.bolgeID)
+              .reduce((acc, i) => acc + i.HacimselDebi * durationSeconds, 1);
+
             return (
               <div className="event-wrapper">
                 <div className="event-details">
                   <div>{eventInfo.timeText}</div>
                   <div>{eventInfo.event.title}</div>
+                  <div>{harcananSuLt.toFixed(2)} Litre Su Harcanır</div>
                 </div>
 
                 <div>
@@ -194,7 +215,7 @@ function HomeCalendar() {
               },
             },
             updateButton: {
-              text: "Takvim Güncelle",
+              text: "Sulama Programını Kaydet",
               click: () => {
                 handleUpdateCalendar();
               },

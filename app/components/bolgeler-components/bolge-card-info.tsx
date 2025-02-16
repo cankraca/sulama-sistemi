@@ -53,6 +53,9 @@ const BolgeCardInfo = (props: {
         "vanaModel"
       ) as HTMLInputElement;
       const vanaCap = document.getElementById("vanaCap") as HTMLInputElement;
+      const suAkisHizi = document.getElementById(
+        "suAkisHizi"
+      ) as HTMLInputElement;
 
       const response = await fetch("/api/vanalar", {
         method: "POST",
@@ -62,6 +65,7 @@ const BolgeCardInfo = (props: {
         body: JSON.stringify({
           VanaModel: vanaModel.value,
           VanaCapi: vanaCap.value,
+          SuAkisHizi: suAkisHizi.value,
           BolgeID: props.bolgeId,
         }),
       });
@@ -71,6 +75,7 @@ const BolgeCardInfo = (props: {
 
       vanaModel.value = "";
       vanaCap.value = "";
+      suAkisHizi.value = "";
     } catch (error) {
       console.error("Hata: ", error);
     } finally {
@@ -159,7 +164,20 @@ const BolgeCardInfo = (props: {
                   id="vanaCap"
                   type="number"
                   min={0}
-                  max={20}
+                  max={5}
+                  step={0.1}
+                  required
+                />
+              </Col>
+              <Col>
+                <Form.Label>Su Akış Hızı (m/s):</Form.Label>
+              </Col>
+              <Col>
+                <Form.Control
+                  id="suAkisHizi"
+                  type="number"
+                  min={0}
+                  max={5}
                   step={0.1}
                   required
                 />

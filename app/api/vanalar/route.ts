@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({message: "Unauthorized token"}, {status: 401});
     }   
   
-    const query = await executeQuery("SELECT * FROM vanalar");
+    const query = await executeQuery("SELECT VanaID, VanaModel, VanaCapi, SuAkisHizi, (SuAkisHizi * POWER((VanaCapi/100)/2,2) * PI() * 1000) AS HacimselDebi, BolgeID FROM vanalar");
 
     const data = JSON.stringify(query);
 
@@ -20,9 +20,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const { VanaModel, VanaCapi, BolgeID} = await request.json();
+        const { VanaModel, VanaCapi, SuAkisHizi, BolgeID} = await request.json();
             
-        await executeQuery("INSERT INTO vanalar (VanaModel, VanaCapi, BolgeID) VALUES (?,?,?)",[VanaModel, VanaCapi, BolgeID]);
+        await executeQuery("INSERT INTO vanalar (VanaModel, VanaCapi, SuAkisHizi, BolgeID) VALUES (?,?,?,?)",[VanaModel, VanaCapi, SuAkisHizi, BolgeID]);
     
         return NextResponse.json({message: "Data added successfully!"}, {status: 200, });
 

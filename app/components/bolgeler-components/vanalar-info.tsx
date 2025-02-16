@@ -37,7 +37,8 @@ const VanalarInfo = (props: { bolgeId: number }) => {
           <th></th>
           <th>Vana Modeli</th>
           <th>Vana Çapı</th>
-          <th>Su Tüketimi (Günlük)</th>
+          <th>Su Akış Hızı</th>
+          <th>Saniye Başı Akan Su Miktarı (Lt)</th>
           <th>Vana Sil</th>
         </tr>
       </thead>
@@ -48,7 +49,8 @@ const VanalarInfo = (props: { bolgeId: number }) => {
               <td>{x.VanaID}</td>
               <td>{x.VanaModel}</td>
               <td>{x.VanaCapi.toFixed(2)} cm</td>
-              <td>{x.GunlukSuTuketimi.toFixed(2)} Lt</td>
+              <td>{x.SuAkisHizi.toFixed(2)} m/s</td>
+              <td>{x.HacimselDebi.toFixed(2)} Lt</td>
               <td>
                 {
                   <Button
