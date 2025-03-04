@@ -1,21 +1,34 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import "@/app/styles/login-style.css";
 import Image from "next/image";
 import loginLogo from "@/public/haytek-login-logo.png";
 import { Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useFormState } from "react-dom";
 import logInAction from "./loginAction";
 import Link from "next/link";
 
 const LogInPage = () => {
-  const [error, formAction] = useFormState(logInAction, undefined);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    const errorMessage = await logInAction(formData); 
+
+    if (errorMessage) {
+      setError(errorMessage); 
+    } else {
+      window.location.href = "/anasayfa"; 
+    }
+  };
+
   return (
     <main>
       <Image src={loginLogo} alt="Logo" style={{ pointerEvents: "none" }} />
       <div className="log-in-container">
-        <Form className="login-form" action={formAction}>
+        <Form className="login-form" onSubmit={handleSubmit}>
           <Form.Group className="form-group">
             <Form.Label>E-posta:</Form.Label>
             <Form.Control

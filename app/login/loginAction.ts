@@ -3,9 +3,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function logInAction(
-  currentState: any,
   formData: FormData
-): Promise<string> {
+): Promise<string | null> { 
   const email = formData.get("email");
   const password = formData.get("password");
 
@@ -19,17 +18,17 @@ export default async function logInAction(
 
   const json = await response.json();
 
-  cookies().set("Authorization", json.token, {
-    secure: true,
-    httpOnly: true,
-    expires: Date.now() + 24 * 60 * 60 * 1000 * 3, //3 days
-    path: "/",
-    sameSite: "strict",
-  });
-
   if (response.ok) {
-    redirect("/anasayfa");
+    cookies().set("Authorization", json.token, {
+      secure: true,
+      httpOnly: true,
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
+      path: "/",
+      sameSite: "strict",
+    });
+
+    return null; 
   } else {
-    return json.error;
+    return json.error || "Login failed"; 
   }
 }
