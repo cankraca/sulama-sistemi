@@ -8,7 +8,7 @@ html, body {
 
 .log-in-container{
     width: 400px;
-    height: 400px;  
+    height: 560px;  
     background-color: rgb(108, 0, 180);
     border-radius: 15px;
     display: flex;

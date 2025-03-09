@@ -5,6 +5,7 @@ import useSWR from "swr";
 export interface Program {
   ProgramID: number;
   ProgramIcerik: ProgramWithRecurring[];
+  KullaniciID: number
 }
 
 export interface ProgramWithRecurring {
@@ -16,6 +17,8 @@ export interface ProgramWithRecurring {
   daysOfWeek: string[];
   startTime: string;
   endTime: string;
+  waterConsumption: number;
+  durationMinutes: number;
 }
 
 export const ProgramContext = createContext<Program[] | undefined>(undefined);

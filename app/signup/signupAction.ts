@@ -9,6 +9,8 @@ export default async function signUpAction(
   const email = formData.get("email");
   const username = formData.get("username");
   const password = formData.get("password");
+  const sehir = formData.get("sehir");
+  const ilce = formData.get("ilce");
 
   const response = await fetch(
     new URL("/api/signup", "http://localhost:3000"),
@@ -21,6 +23,8 @@ export default async function signUpAction(
         Email: email,
         KullaniciAdi: username,
         Sifre: password,
+        Sehir: sehir,
+        Ilce: ilce
       }),
     }
   );

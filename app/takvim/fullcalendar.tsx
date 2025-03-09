@@ -65,7 +65,18 @@ function HomeCalendar() {
     if (calendarRef.current) {
       const myProgram: ProgramWithRecurring[] = [];
       const takvimListesi = calendarRef.current.getApi().getEvents();
-      takvimListesi.map((x) =>
+      takvimListesi.map((x) => {
+        const start = x.start;
+        const end = x.end;
+        const durationSeconds =
+          start && end
+            ? Math.floor((end.getTime() - start.getTime()) / 1000)
+            : 0;
+
+        const harcananSuLt = vanalar
+          .filter((vana) => vana.BolgeID == x.extendedProps.bolgeID)
+          .reduce((acc, i) => acc + i.HacimselDebi * durationSeconds, 1);
+
         myProgram.push({
           allDay: false,
           backgroundColor: x.backgroundColor,
@@ -75,8 +86,10 @@ function HomeCalendar() {
           startTime: x.startStr.split("T")[1],
           title: x.title,
           bolgeID: x.extendedProps.bolgeID,
-        })
-      );
+          waterConsumption: ((harcananSuLt * 100) | 0) / 100,
+          durationMinutes: durationSeconds / 60,
+        });
+      });
       return myProgram;
     }
     return [];
@@ -84,6 +97,16 @@ function HomeCalendar() {
 
   const handleUpdateCalendar = async () => {
     try {
+      const deleteResponse = await fetch("/api/program", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          KullaniciID: initialEvents.map((x) => x.KullaniciID)[0],
+        }),
+      });
+
       const response = await fetch("/api/program", {
         method: "POST",
         headers: {
@@ -94,20 +117,11 @@ function HomeCalendar() {
         }),
       });
 
-      const deleteResponse = await fetch("/api/program", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ProgramID: initialEvents.map((x) => x.ProgramID)[0],
-        }),
-      });
-      const responseData = await response.json();
       const deleteResponseData = await deleteResponse.json();
+      const responseData = await response.json();
 
-      console.log(responseData);
       console.log(deleteResponseData);
+      console.log(responseData);
     } catch (error) {
       console.error("Hata: ", error);
     } finally {
@@ -145,22 +159,17 @@ function HomeCalendar() {
           events={initialEvents.map((x) => x.ProgramIcerik)[0]}
           ref={calendarRef}
           eventContent={(eventInfo) => {
-            const start = eventInfo.event.start;
-            const end = eventInfo.event.end;
-            const durationSeconds =
-              start && end
-                ? Math.floor((end.getTime() - start.getTime()) / 1000)
-                : 0;
-            const harcananSuLt = vanalar
-              .filter((x) => x.BolgeID == eventInfo.event.extendedProps.bolgeID)
-              .reduce((acc, i) => acc + i.HacimselDebi * durationSeconds, 1);
-
+            const harcananSuLt = eventInfo.event.extendedProps.waterConsumption;
             return (
               <div className="event-wrapper">
                 <div className="event-details">
                   <div>{eventInfo.timeText}</div>
                   <div>{eventInfo.event.title}</div>
-                  <div>{harcananSuLt.toFixed(2)} Litre Su Harcanır</div>
+                  <div>
+                    {harcananSuLt
+                      ? `${harcananSuLt} Litre Su Harcanır`
+                      : "Su tüketim verisi için program kaydet!"}
+                  </div>
                 </div>
 
                 <div>

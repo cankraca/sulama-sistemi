@@ -18,16 +18,18 @@ export async function POST(request: NextRequest) {
 
     const path = join(tempDir, file.name);
     const publicPath = join(publicDir, file.name);
-    
+
     try {
-        await writeFile(path, buffer);
+        // Convert buffer to Uint8Array
+        const uint8Array = new Uint8Array(buffer);
+
+        await writeFile(path, uint8Array); // Use Uint8Array
         await rename(path, publicPath);
         return NextResponse.json({success: true, path: file.name});
     } catch (error: any) {
         console.error("Error moving file: ", error);
         return NextResponse.json({success: false, error:error.message})
     }
-
 }
 
 export async function DELETE(request: NextRequest) {

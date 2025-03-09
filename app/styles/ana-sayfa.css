@@ -18,6 +18,7 @@
     margin: 50px;
 }
 
+
 .harcanan-su{
     display: flex;
     align-items: flex-start;
@@ -41,8 +42,10 @@
     border: 2px solid #ccc;
     margin: 50px;
 }
-
-.sensor-bilgiler,.hava-durumu-bilgiler,.harcanan-su-bilgileri {
+.hava-durumu-bilgiler {
+    margin-left: 70px;
+}
+.sensor-bilgiler,.harcanan-su-bilgileri {
     margin-left: 20px;
 }
 

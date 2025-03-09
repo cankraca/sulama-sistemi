@@ -9,15 +9,13 @@ import { VanalarContextProvider } from "../context/VanaContext";
 import ListBolgeler from "./listBolgeler";
 
 const Bolgeler = () => {
-  
-
   return (
     <ProgramContextProvider>
       <BolgeContextProvider>
         <VanalarContextProvider>
           <main>
             <NavBar />
-            <ListBolgeler/>
+            <ListBolgeler />
             <BolgeEkleButton />
           </main>
         </VanalarContextProvider>

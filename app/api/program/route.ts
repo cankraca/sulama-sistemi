@@ -51,9 +51,9 @@ export async function POST(request: NextRequest) {
 }
 export async function DELETE(request: NextRequest) {
     try {
-        const {ProgramID} = await request.json();
+        const {KullaniciID} = await request.json();
       
-        await executeQuery("DELETE FROM program WHERE ProgramID NOT IN (SELECT * FROM (SELECT MAX(ProgramID) FROM program) AS max_program)", [ProgramID]);
+        await executeQuery("DELETE FROM program WHERE KullaniciID = ?", [KullaniciID]);
       
         return NextResponse.json({message: "Data deleted!"}, {status: 200});
       
